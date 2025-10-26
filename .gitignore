@@ -1,0 +1,68 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Swift Build
+/.build
+/.swiftpm
+/Packages
+*.xcodeproj
+xcuserdata/
+DerivedData/
+
+# IDEs
+/.vscode/*
+!/.vscode/hummingbird.code-snippets
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+/.devContainer
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+secrets/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# GitHub Actions Build Artifacts (local testing)
+.github/actions/*/.build
+.github/actions/*/Package.resolved
+
+# Docker Compose Override (local customizations)
+docker-compose.override.yml
+
+# Backup files
+*.bak
+*.backup
+
+# Coverage Reports
+.coverage
+coverage/
+*.lcov
+
+# Node modules (if using any JS tooling)
+node_modules/
