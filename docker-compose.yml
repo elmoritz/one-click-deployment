@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/${GITHUB_REPOSITORY}:latest
+    container_name: hummingbird-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=hummingbird
+      - DATABASE_USER=hummingbird
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: hummingbird-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=hummingbird
+      - POSTGRES_USER=hummingbird
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hummingbird"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
