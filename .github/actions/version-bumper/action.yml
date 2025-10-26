@@ -1,0 +1,30 @@
+name: 'Version Bumper'
+description: 'Calculate semantic version bump for releases'
+author: 'Your Name'
+
+inputs:
+  release-type:
+    description: 'Release type: patch, minor, or major'
+    required: true
+
+outputs:
+  new-version:
+    description: 'The new version after bumping'
+    value: ${{ steps.bump.outputs.new-version }}
+  old-version:
+    description: 'The previous version before bumping'
+    value: ${{ steps.bump.outputs.old-version }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Version Bumper
+      id: bump
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/version-bumper.swift
+        ${{ github.action_path }}/version-bumper.swift "${{ inputs.release-type }}"
+
+branding:
+  icon: 'arrow-up'
+  color: 'blue'

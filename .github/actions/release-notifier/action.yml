@@ -1,0 +1,42 @@
+name: 'Release Notifier'
+description: 'Create release notifications and GitHub Actions summaries'
+author: 'Your Name'
+
+inputs:
+  version:
+    description: 'Release version (e.g., v1.2.3)'
+    required: true
+  previous-version:
+    description: 'Previous version (e.g., v1.2.2)'
+    required: true
+  release-type:
+    description: 'Release type (patch, minor, major)'
+    required: true
+  image-tags:
+    description: 'Docker image tags (comma-separated)'
+    required: false
+  deployment-status:
+    description: 'Deployment status (success, failure, skipped)'
+    required: false
+  repository:
+    description: 'GitHub repository name'
+    required: false
+    default: ${{ github.repository }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Generate Notification
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/release-notifier.swift
+        ${{ github.action_path }}/release-notifier.swift \
+          "${{ inputs.version }}" \
+          "${{ inputs.previous-version }}" \
+          "${{ inputs.release-type }}" \
+          "${{ inputs.image-tags }}" \
+          "${{ inputs.deployment-status }}"
+
+branding:
+  icon: 'bell'
+  color: 'purple'

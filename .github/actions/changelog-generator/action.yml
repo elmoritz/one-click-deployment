@@ -1,0 +1,39 @@
+name: 'Changelog Generator'
+description: 'Generate changelog from git commits using conventional commits'
+author: 'Your Name'
+
+inputs:
+  from-version:
+    description: 'Previous version/tag (e.g., v1.2.3). Leave empty for all commits.'
+    required: false
+    default: ''
+  to-version:
+    description: 'New version/tag (e.g., v1.3.0)'
+    required: true
+  output-file:
+    description: 'Path to write changelog file (optional)'
+    required: false
+
+outputs:
+  changelog:
+    description: 'Generated changelog content'
+    value: ${{ steps.generate.outputs.changelog }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Generate Changelog
+      id: generate
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/changelog-generator.swift
+
+        if [ -n "${{ inputs.from-version }}" ]; then
+          ${{ github.action_path }}/changelog-generator.swift "${{ inputs.to-version }}" "${{ inputs.from-version }}"
+        else
+          ${{ github.action_path }}/changelog-generator.swift "${{ inputs.to-version }}"
+        fi
+
+branding:
+  icon: 'file-text'
+  color: 'green'
